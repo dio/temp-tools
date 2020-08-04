@@ -9,12 +9,13 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io"
+	"time"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/oauth"
 	"google.golang.org/grpc/metadata"
-	"io"
-	"time"
 )
 
 type Flag struct {
@@ -69,7 +70,7 @@ func ParseFlags() Flag {
 
 // parseNodeMatcher parses the csds request yaml from -request_file and -request_yaml to nodematcher
 // if -request_file and -request_yaml are both set, the values in this yaml string will override and
-// merge with the request loaded from -request_file
+// merge with the request loaded from -request_file.
 func (c *Client) parseNodeMatcher() error {
 	if c.info.requestFile == "" && c.info.requestYaml == "" {
 		return errors.New("missing request yaml")
@@ -82,7 +83,7 @@ func (c *Client) parseNodeMatcher() error {
 
 	c.nodeMatcher = nodematchers
 
-	// check if required fields exist in nodematcher
+	// Check if required fields exist in nodematcher.
 	switch c.info.platform {
 	case "gcp":
 		keys := []string{"TRAFFICDIRECTOR_GCP_PROJECT_NUMBER", "TRAFFICDIRECTOR_NETWORK_NAME"}
@@ -98,7 +99,7 @@ func (c *Client) parseNodeMatcher() error {
 	return nil
 }
 
-// connWithAuth connects to uri with authentication
+// connWithAuth connects to uri with authentication.
 func (c *Client) connWithAuth() error {
 	var scope string
 	switch c.info.authnMode {
